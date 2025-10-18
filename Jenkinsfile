@@ -96,35 +96,36 @@ pipeline {
                 }
             }
         }
-    }
-    stage('Post Summary to Jira') {
-    steps {
-        withCredentials([usernamePassword(credentialsId: 'Jira_API_Key', usernameVariable: 'JIRA_USER', passwordVariable: 'JIRA_TOKEN')]) {
-            bat '''
-                echo { > payload.json
-                echo   "body": { >> payload.json
-                echo     "type": "doc", >> payload.json
-                echo     "version": 1, >> payload.json
-                echo     "content": [ { >> payload.json
-                echo       "type": "paragraph", >> payload.json
-                echo       "content": [ { >> payload.json
-                echo         "type": "text", >> payload.json
-                echo         "text": "Automation run completed.\\nStatus: SUCCESS.\\nTotal: 10 Passed: 10 Failed: 0 Skipped: 0\\nBuild URL: %BUILD_URL%" >> payload.json
-                echo       } ] >> payload.json
-                echo     } ] >> payload.json
-                echo   } >> payload.json
-                echo } >> payload.json
+        stage('Post Summary to Jira') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'Jira_API_Key', usernameVariable: 'JIRA_USER', passwordVariable: 'JIRA_TOKEN')]) {
+                    bat '''
+                        echo { > payload.json
+                        echo   "body": { >> payload.json
+                        echo     "type": "doc", >> payload.json
+                        echo     "version": 1, >> payload.json
+                        echo     "content": [ { >> payload.json
+                        echo       "type": "paragraph", >> payload.json
+                        echo       "content": [ { >> payload.json
+                        echo         "type": "text", >> payload.json
+                        echo         "text": "Automation run completed.\\nStatus: SUCCESS.\\nTotal: 10 Passed: 10 Failed: 0 Skipped: 0\\nBuild URL: %BUILD_URL%" >> payload.json
+                        echo       } ] >> payload.json
+                        echo     } ] >> payload.json
+                        echo   } >> payload.json
+                        echo } >> payload.json
 
-                curl -X POST ^
-                    --ssl-no-revoke ^
-                    -u "%JIRA_USER%:%JIRA_TOKEN%" ^
-                    -H "Content-Type: application/json" ^
-                    --data @payload.json ^
-                    https://neverabdicate.atlassian.net/rest/api/3/issue/PSP-36/comment
-            '''
+                        curl -X POST ^
+                        --ssl-no-revoke ^
+                        -u "%JIRA_USER%:%JIRA_TOKEN%" ^
+                        -H "Content-Type: application/json" ^
+                        --data @payload.json ^
+                        https://neverabdicate.atlassian.net/rest/api/3/issue/PSP-36/comment
+                    '''
+                    }
+                }
+            }
         }
-    }
-}
+
     post {
         always {
             archiveArtifacts artifacts: 'reports/*.*', allowEmptyArchive: true
