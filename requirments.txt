@@ -1,0 +1,14 @@
+# Core testing framework
+pytest==8.4.2
+
+# Parallel test execution
+pytest-xdist==3.8.0
+
+# HTML report generation
+pytest-html==4.1.1
+
+# Browser automation
+selenium==4.37.0
+
+# Json Report
+pytest-json-report==1.5.0

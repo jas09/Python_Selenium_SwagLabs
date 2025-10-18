@@ -3,18 +3,18 @@ pipeline {
 
     environment {
         JIRA_URL = "https://neverabdicate.atlassian.net"
-        JIRA_ISSUE = "RPS-6"
+        JIRA_ISSUE = "PSP-36"
         JIRA_CRED = credentials('Jira_API_Key')
     }
 
     stages {
         stage('Checkout Code') {
             steps {
-                git branch: 'main', url: 'https://github.com/jas09/RobotFramework_Python_Swaglabs.git'
+                git branch: 'main', url: 'https://github.com/jas09/Python_Selenium_SwagLabs.git'
             }
         }
 
-        stage('Install Dependencies') {
+        stage('Setup Python Environment') {
             steps {
                 bat '''
                     python -m venv venv
@@ -25,46 +25,68 @@ pipeline {
             }
         }
 
-        stage('Run Tests') {
-            steps {	
-                bat 'pabot --processes 2 --outputdir results tests/'
+        stage('Run Pytest Suite') {
+            steps {
+                bat '''
+                pytest -n 2 -m smoke ^
+                --browser_name=Edge ^
+                --url_key=SwagLabs ^
+                --headless ^
+                --html=reports/report.html
+                --json-report --json-report-file=reports/report.json
+                '''
+            }
+        }
+        stage('Extract Test Summary') {
+            steps {
+                bat '''
+                call venv\\Scripts\\activate
+                python extract_summary.py
+                '''
             }
         }
 
-        stage('Publish Robot Results') {
+        stage('Publish HTML Report') {
             steps {
-                robot(
-                    outputPath: 'results',
-                    outputFileName: 'output.xml',
-                    logFileName: 'log.html',
-                    reportFileName: 'report.html',
-                    passThreshold: 80,
-                    unstableThreshold: 70,
-                    otherFiles: 'screenshot-*.png'
-                )
-            }
-        }
-		stage('Convert to JUnit (Optional)') {
-            steps {
-                bat 'rebot --xunit results/xunit.xml results/output.xml'
-            }
-        }
-		stage('Publish JUnit Results') {
-            steps {
-                junit 'results/xunit.xml'
+                publishHTML([
+                    allowMissing: false,
+                    alwaysLinkToLastBuild: true,
+                    keepAll: true',
+                    reportDir: 'reports',
+                    reportFiles: 'report.html',
+                    reportName: 'Pytest Smoke Report'
+                ])
             }
         }
         stage('Update Jira') {
+            when {
+                expression { fileExists('reports/summary.txt') }
+            }
             steps {
                 script {
-                    def status = currentBuild.currentResult == 'SUCCESS' ? "PASS" : "FAIL"
-                    def message = "Automation run completed. Status: ${status}. Build: ${env.BUILD_URL}"
+                    def summary = readFile('reports/summary.txt').trim()
+                    def buildStatus = currentBuild.currentResult ?: 'UNKNOWN'
+
+                    def jiraComment = """{
+                        "body": {
+                            "type": "doc",
+                            "version": 1,
+                            "content": [{
+                                "type": "paragraph",
+                                "content": [{
+                                    "type": "text",
+                                    "text": "Automation run completed.\\nStatus: ${buildStatus}.\\n${summary}\\nBuild URL: ${env.BUILD_URL}"
+                                }]
+                            }]
+                        }
+                    }"""
+
                     bat """
                         curl -X POST ^
-						--ssl-no-revoke ^
+                        --ssl-no-revoke ^
                         -u ${JIRA_CRED_USR}:${JIRA_CRED_PSW} ^
                         -H "Content-Type: application/json" ^
-                        --data "{\\"body\\":{\\"type\\":\\"doc\\",\\"version\\":1,\\"content\\":[{\\"type\\":\\"paragraph\\",\\"content\\":[{\\"type\\":\\"text\\",\\"text\\":\\"Automation run completed successfully. Status: PASS. Build URL: ${BUILD_URL}\\"}]}]}}" ^
+                        --data "${jiraComment}" ^
                         ${JIRA_URL}/rest/api/3/issue/${JIRA_ISSUE}/comment
                     """
                 }
@@ -74,8 +96,10 @@ pipeline {
 
     post {
         always {
-            junit 'results/xunit.xml'
-            archiveArtifacts artifacts: 'results/*.xml', allowEmptyArchive: true
+            archiveArtifacts artifacts: 'reports/*.*', allowEmptyArchive: true
+        }
+        failure {
+            echo 'Build failed. Check the HTML report for details.'
         }
     }
 }
