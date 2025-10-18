@@ -1,0 +1,67 @@
+{
+  "data": [
+    {
+      "Username": "standard_user",
+      "Password": "secret_sauce",
+      "sort_type": "name_az",
+      "productName": "Sauce Labs Backpack",
+      "firstName": "Azharulla",
+      "lastName": "Mohammed",
+      "postalCode": "5600036"
+    },
+    {
+      "Username": "standard_user",
+      "Password": "secret_sauce",
+      "sort_type": "name_za",
+      "productName": "Sauce Labs Bike Light",
+      "firstName": "Sachin",
+      "lastName": "Tendulkar",
+      "postalCode": "5600037"
+    },
+    {
+      "Username": "standard_user",
+      "Password": "secret_sauce",
+      "sort_type": "price_high_low",
+      "productName": "Sauce Labs Bolt T-Shirt",
+      "firstName": "Brian",
+      "lastName": "Lara",
+      "postalCode": "5600038"
+    },
+    {
+      "Username": "standard_user",
+      "Password": "secret_sauce",
+      "sort_type": "name_za",
+      "productName": "Sauce Labs Fleece Jacket",
+      "firstName": "Steve",
+      "lastName": "Smith",
+      "postalCode": "5600039"
+    },
+    {
+      "Username": "standard_user",
+      "Password": "secret_sauce",
+      "sort_type": "price_low_high",
+      "productName": "Sauce Labs Onesie",
+      "firstName": "Williamson",
+      "lastName": "Kane",
+      "postalCode": "5600039"
+    }
+  ],
+  "data_invalidLogin": [
+    {
+      "Username": "standard_user",
+      "Password": ""
+    },
+    {
+      "Username": "",
+      "Password": "secret_sauce"
+    },
+    {
+      "Username": "",
+      "Password": ""
+    },
+    {
+      "Username": "locked_out_user",
+      "Password": "secret_sauce"
+    }
+  ]
+}

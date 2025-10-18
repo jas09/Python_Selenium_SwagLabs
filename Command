@@ -1,0 +1,1 @@
+pytest -n 2 -m smoke --browser_name Edge --url_key SwagLabs --html reports/report.html
