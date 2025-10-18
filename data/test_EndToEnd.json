@@ -53,6 +53,15 @@
       "firstName": "Inayatulla",
       "lastName": "Mohammed",
       "postalCode": "5600039"
+    },
+    {
+      "Username": "standard_user",
+      "Password": "secret_sauce",
+      "sort_type": "name_az",
+      "productName": "Sauce Labs Onesie",
+      "firstName": "Tester",
+      "lastName": "QA",
+      "postalCode": "5600050"
     }
   ],
   "data_invalidLogin": [
