@@ -4,7 +4,7 @@ import pytest
 
 from pageObjects.LoginPage import LoginPage
 
-test_data_path = '../data/test_EndToEnd.json'
+test_data_path = '/data/test_EndToEnd.json'
 with open(test_data_path) as f:
     test_data = json.load(f)
     test_data_list = test_data["data"]
