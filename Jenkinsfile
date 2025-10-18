@@ -51,7 +51,7 @@ pipeline {
                 publishHTML([
                     allowMissing: false,
                     alwaysLinkToLastBuild: true,
-                    keepAll: true',
+                    keepAll: true,
                     reportDir: 'reports',
                     reportFiles: 'report.html',
                     reportName: 'Pytest Smoke Report'
