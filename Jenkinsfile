@@ -67,6 +67,7 @@ pipeline {
                 script {
                     def summary = readFile('reports/summary.txt').trim()
                     def buildStatus = currentBuild.currentResult ?: 'UNKNOWN'
+                    def jiraCommentFile = 'reports/jira_comment.json'
 
                     def jiraComment = """{
                         "body": {
@@ -81,7 +82,8 @@ pipeline {
                             }]
                         }
                     }"""
-
+                // Use withCredentials for secure access
+                withCredentials([usernamePassword(credentialsId: 'Jira_API_Key', usernameVariable: 'JIRA_USER', passwordVariable: 'JIRA_TOKEN')]) {
                     bat """
                         curl -X POST ^
                         --ssl-no-revoke ^
@@ -90,6 +92,7 @@ pipeline {
                         --data "${jiraComment}" ^
                         ${JIRA_URL}/rest/api/3/issue/${JIRA_ISSUE}/comment
                     """
+                    }
                 }
             }
         }
