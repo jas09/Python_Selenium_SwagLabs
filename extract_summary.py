@@ -6,7 +6,7 @@ SUMMARY_TXT = os.path.join("reports", "summary.txt")
 
 def extract_summary():
     if not os.path.exists(REPORT_JSON):
-        print(f"❌ Report file not found: {REPORT_JSON}")
+        print(f"Report file not found: {REPORT_JSON}")
         return
 
     with open(REPORT_JSON, encoding="utf-8") as f:
@@ -22,7 +22,7 @@ def extract_summary():
     with open(SUMMARY_TXT, "w", encoding="utf-8") as out:
         out.write(f"Total: {total}\nPassed: {passed}\nFailed: {failed}\nSkipped: {skipped}\n")
 
-    print("✅ Summary extracted successfully.")
+    print("Summary extracted successfully.")
     print(open(SUMMARY_TXT).read())
 
 if __name__ == "__main__":
