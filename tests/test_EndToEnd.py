@@ -1,11 +1,12 @@
 import json
-
+import os
 import pytest
-
 from pageObjects.LoginPage import LoginPage
 
-test_data_path = '/data/test_EndToEnd.json'
-with open(test_data_path) as f:
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+test_data_path = os.path.join(BASE_DIR, "data", "test_EndToEnd.json")
+#test_data_path = '../data/test_EndToEnd.json'
+with open(test_data_path,encoding="utf-8") as f:
     test_data = json.load(f)
     test_data_list = test_data["data"]
     test_data_list_invalidLogin = test_data["data_invalidLogin"]

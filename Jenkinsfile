@@ -32,7 +32,8 @@ pipeline {
                 --browser_name=Edge ^
                 --url_key=SwagLabs ^
                 --headless ^
-                --html=reports/report.html
+                --html=reports/report.html ^
+                --json-report ^
                 --json-report --json-report-file=reports/report.json
                 '''
             }
