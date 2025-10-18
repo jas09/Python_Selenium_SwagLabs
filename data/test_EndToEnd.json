@@ -44,6 +44,15 @@
       "firstName": "Williamson",
       "lastName": "Kane",
       "postalCode": "5600039"
+    },
+    {
+      "Username": "standard_user",
+      "Password": "secret_sauce",
+      "sort_type": "price_high_low",
+      "productName": "Sauce Labs Onesie",
+      "firstName": "Inayatulla",
+      "lastName": "Mohammed",
+      "postalCode": "5600039"
     }
   ],
   "data_invalidLogin": [
